@@ -15,6 +15,10 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  email: {
+    type: String,
+    default: '1647749125@qq.com'
+  },
   avatar: {
     type: String
   },

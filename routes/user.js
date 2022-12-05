@@ -7,27 +7,24 @@ const gravatar = require('gravatar');
 const User = require('../models/User');
 const result = require('../common/constants')
 
-// router.get('/test', (req, res) => {
-//   // 查询User数据集合中是否拥有邮箱
-//   console.warn('res', req.body);
-// });
+
 
 // @route  POST api/user/register
 // @desc   返回的请求的json数据
 // @access public
 router.post('/register', (req, res) => {
   // 查询User数据集合中是否拥有邮箱
-  console.warn('res', req.body, res);
   User.findOne({ account: req.body.account }).then(user => {
     if (user) {
       return res.status(200).json({ ...result.ErrorResultData, message: '账号已被注册' });
     } else {
       // 随机生成头像
-      const avatar = gravatar.url(req.body.account, {
-        s: '200',
+      const avatar = gravatar.url(req.body.email, {
+        s: '100',
         r: 'pg',
-        d: 'mm'
+        d: 'monsterid'
       });
+
       // 用户对象
       const newUser = new User({
         name: req.body.name,
@@ -90,14 +87,14 @@ router.post('/login', (req, res) => {
         // 1.用户输入账户和密码请求服务器
         // 2.服务器验证用户信息，返回用户一个token值
         // 接收的参数： 规则  加密的名字   过期时间  回调函数
-        jwt.sign(rule, "secret", { expiresIn: 99999999999 }, (err, token) => {
+        jwt.sign(rule, "qiqi277", { expiresIn: 99999999999 }, (err, token) => {
           if (err) throw err;
           res.json({
             success: true,
             ...result.SuccessResultData,
             data: {
               ...user,
-              token: 'qiqi277' + token,
+              token,
             }
           });
         });

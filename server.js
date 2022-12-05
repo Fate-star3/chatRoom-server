@@ -4,6 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const methods = require('./common/methods')
 
 mongoose
   .connect('mongodb://localhost:27017/user')
@@ -23,8 +24,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // 挂载路由
+
 app.use(route)
-app.use('/api/user', userRoute)
+app.use('/user', userRoute)
+app.use(methods());
+
 
 // 引入socket
 require('./routes/socket.js')(io)
