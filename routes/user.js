@@ -1,4 +1,4 @@
-// @login & register
+const url = require('url')
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs')
@@ -6,7 +6,33 @@ const jwt = require('jsonwebtoken');
 const gravatar = require('gravatar');
 const User = require('../models/User');
 const result = require('../common/constants')
+const { secret } = require('../common/config')
+const { verifyToken } = require('../utils/jwt')
 
+
+router.get('/test', verifyToken, (req, res, next) => {
+  res.json('添加成功')
+  // console.log(req.headers);
+  // verifyToken(req, res, next)
+})
+
+router.get('/userInfo', (req, res, next) => {
+  // var parseObj = url.parse(req.url, true)//获取的是url模块的parse方法
+  // 返回用户信息
+  const { account } = req.query
+  User.findOne({ account: account }).then(user => {
+    if (user) {
+      res.json({
+        ...result.SuccessResultData,
+        data: user
+      })
+
+    } else {
+      res.status(401).json('查询用户信息失败')
+    }
+  });
+
+})
 
 
 // @route  POST api/user/register
@@ -78,7 +104,7 @@ router.post('/login', (req, res) => {
     // 密码匹配
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
-        const rule = {
+        const payload = {
           id: user.id,
           name: user.name,
           avatar: user.avatar,
@@ -86,14 +112,27 @@ router.post('/login', (req, res) => {
         };
         // 1.用户输入账户和密码请求服务器
         // 2.服务器验证用户信息，返回用户一个token值
-        // 接收的参数： 规则  加密的名字   过期时间  回调函数
-        jwt.sign(rule, "qiqi277", { expiresIn: 99999999999 }, (err, token) => {
+        // 接收的参数： 规则payload  秘钥secretKet   options  回调函数
+        jwt.sign(payload, secret, {
+          expiresIn: 9999,//JWT Token 过期时间
+          issuer: 'yyx',//JWT Token 的签发者，其值应为 大小写敏感的 字符串 或 Uri
+          audience: 'qiqi',//接收 JWT Token 的一方
+          // jwtid: '' //JWT Token ID，令牌的唯一标识符，通常用于一次性消费的Token
+          // notBefore JWT Token 生效时间
+        }, (err, token) => {
           if (err) throw err;
           res.json({
             success: true,
             ...result.SuccessResultData,
             data: {
-              ...user,
+              id: user.id,
+              name: user.name,
+              account: user.account,
+              password: user.password,
+              email: user.email,
+              avatar: user.avatar,
+              identity: user.identity,
+              date: user.date,
               token,
             }
           });

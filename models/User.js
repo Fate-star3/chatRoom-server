@@ -24,6 +24,7 @@ const UserSchema = new Schema({
   },
   identity: {
     type: String,
+    default: 'admin'
   },
   date: {
     type: Date,
