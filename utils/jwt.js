@@ -45,7 +45,7 @@ const verifyToken = (req, res, next) => {
     let jwtToken = req.headers.authorization.slice(6)
     console.log(jwtToken);
     if (jwtToken) {
-        jwt.verify(jwtToken, secret, (err, payload) => {
+        jwt.verify('jwtToken', secret, (err, payload) => {
             //1. token 验证失败
             //2. 验证成功但是 token 过期了
             if (err) {
@@ -65,7 +65,7 @@ const verifyToken = (req, res, next) => {
             }
         })
     } else {
-        // res.status(401).error('请提供jwtToken');
+        res.status(401).error('请提供jwtToken');
     }
 };
 

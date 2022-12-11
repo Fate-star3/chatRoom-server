@@ -2,9 +2,9 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const session = require('express-session')
+// const session = require('express-session')
+const passport = require('passport')
 const mongoose = require('mongoose');
-const methods = require('./common/methods')
 const jwt = require('./utils/jwt')
 const { dbUrl, port } = require('./common/config')
 
@@ -23,6 +23,10 @@ app.use('/public/', express.static('./public/'))
 const route = require('./routes/index')
 const userRoute = require('./routes/user')
 
+// passport 初始化
+app.use(passport.initialize());
+
+require('./common/passport')(passport);
 
 // 使用body-parser中间件 body-parser已经加入了到了express中了，不需要引入第三方包
 app.use(express.urlencoded({ extended: false }))
@@ -33,9 +37,9 @@ app.use(express.json())
 app.use(route)
 app.use('/user', userRoute)
 
+
 // 挂载中间件
 // app.use(jwt.verifyToken())
-// app.use(methods());
 // 全局错误处理中间件
 /**错误处理中间件始终采用四个参数。您必须提供四个参数才能将其标识为错误处理中间件函数。即使不需要使用该对象，也必须指定它以维护签名。否则，
  * 该对象将被解释为常规中间件，并且无法处理错误。 */
