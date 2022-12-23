@@ -7,6 +7,7 @@ const passport = require('passport')
 const mongoose = require('mongoose');
 const jwt = require('./utils/jwt')
 const { dbUrl, port } = require('./common/config')
+const bodyParser = require('./utils/custom-body-parser')
 
 mongoose
   .connect(dbUrl)
@@ -29,24 +30,28 @@ app.use(passport.initialize());
 require('./common/passport')(passport);
 
 // 使用body-parser中间件 body-parser已经加入了到了express中了，不需要引入第三方包
+// 通过挂载express.urlencoded()内置中间件，可以解析表单中的url-encoede格式的数据
 app.use(express.urlencoded({ extended: false }))
+// 通过挂载express.json()内置中间件，可以解析json格式的表单数据
 app.use(express.json())
 
+// 挂载中间件
+// app.use(jwt.verifyToken)
+// app.use(bodyParser)
 
 // 挂载路由
 app.use(route)
 app.use('/user', userRoute)
 
 
-// 挂载中间件
-// app.use(jwt.verifyToken())
+
 // 全局错误处理中间件
 /**错误处理中间件始终采用四个参数。您必须提供四个参数才能将其标识为错误处理中间件函数。即使不需要使用该对象，也必须指定它以维护签名。否则，
- * 该对象将被解释为常规中间件，并且无法处理错误。 */
-// app.use(function (err, req, res, next) {
-//   console.error(err.stack)
-//   res.status(500).send('Something broke!')
-// })
+ * 该对象将被解释为常规中间件，并且无法处理错误。顺序在最后 */
+app.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
 
 // express框架中，默认不支持session和cookie  session数据是内存存储的，服务器一旦重启就会丢失，真正的生产环境会把session进行持久化存储
 // 所以我们使用第三方中间件来解决

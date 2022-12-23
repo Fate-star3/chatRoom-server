@@ -50,9 +50,13 @@ const verifyToken = (req, res, next) => {
             //2. 验证成功但是 token 过期了
             if (err) {
                 if (err.name === 'TokenExpiredError') {
-                    res.status(401).error('token已经过期');
+                    res.statusCode = 401
+                    res.end('token已经过期')
+                    // res.status(401).error('token已经过期');
                 } else {
-                    res.status(401).error('token是无效的');
+                    res.statusCode = 401
+                    res.end('token是无效的')
+                    // res.status(401).error('token是无效的');
                 }
             } else {
                 console.log('payload', payload);
@@ -60,12 +64,16 @@ const verifyToken = (req, res, next) => {
                 if (identity === 'admin') {
                     next()
                 } else {
-                    res.status(401).error('你不是管理员!无权执行此操作!');
+                    res.statusCode = 401
+                    res.end('你不是管理员!无权执行此操作!')
+                    // res.status(401).error('你不是管理员!无权执行此操作!');
                 }
             }
         })
     } else {
-        res.status(401).error('请提供jwtToken');
+        res.statusCode = 401
+        res.end('请提供jwtToken')
+        // res.status(401).error('请提供jwtToken');
     }
 };
 

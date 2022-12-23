@@ -9,15 +9,13 @@ const result = require('../common/constants')
 const { secret } = require('../common/config')
 const { verifyToken } = require('../utils/jwt')
 
-// express().use('/test', verifyToken)
 
 router.get('/test', passport.authenticate('jwt', { session: false })
   , (req, res, next) => {
-
     res.json('添加成功')
-    // console.log(req.headers);
-    // verifyToken(req, res, next)
   })
+
+
 
 router.get('/userInfo', (req, res, next) => {
   // var parseObj = url.parse(req.url, true)//获取的是url模块的parse方法
