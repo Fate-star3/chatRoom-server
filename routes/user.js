@@ -134,7 +134,7 @@ router.post('/login', (req, res) => {
               avatar: user.avatar,
               identity: user.identity,
               date: user.date,
-              token,
+              token: `Bearer ${token}`
             }
           });
         });
