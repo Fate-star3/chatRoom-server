@@ -12,7 +12,7 @@ opts.secretOrKey = secret;
 
 module.exports = passport => {
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
-
+    console.log(jwt_payload);
     // 在passport中已经得到了对应的内容，就可以对得到的内容进行查询
     User.findById(jwt_payload.id)
       .then(user => {//查询到返回一个用户

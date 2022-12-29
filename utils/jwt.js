@@ -61,7 +61,7 @@ const verifyToken = (req, res, next) => {
             } else {
                 console.log('payload', payload);
                 const { identity } = payload
-                if (identity === 'admin') {
+                if (identity !== '学生') {
                     next()
                 } else {
                     res.statusCode = 401

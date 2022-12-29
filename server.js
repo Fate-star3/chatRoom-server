@@ -7,7 +7,6 @@ const passport = require('passport')
 const mongoose = require('mongoose');
 const jwt = require('./utils/jwt')
 const { dbUrl, port } = require('./common/config')
-const bodyParser = require('./utils/custom-body-parser')
 
 mongoose
   .connect(dbUrl)
@@ -37,7 +36,6 @@ app.use(express.json())
 
 // 挂载中间件
 // app.use(jwt.verifyToken)
-// app.use(bodyParser)
 
 // 挂载路由
 app.use(route)

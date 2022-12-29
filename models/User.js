@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const { getDisplayTime } = require('../utils/tools')
 // Create Schema
 const UserSchema = new Schema({
   name: {
@@ -27,8 +27,8 @@ const UserSchema = new Schema({
     default: 'admin'
   },
   date: {
-    type: Date,
-    default: Date.now
+    type: String,
+    default: getDisplayTime(Date.now())
   },
 
 });
